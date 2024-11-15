@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Income Records</h2>
+
+<!-- Search Form -->
+<form method="GET" action="{{ url_for('view_income') }}" class="mb-3">
+    <div class="form-row">
+        <div class="col">
+            <input type="text" name="search" class="form-control" placeholder="Search by source or amount" value="{{ search_query }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-info">Search</button>
+        </div>
+    </div>
+</form>
+
+<!-- Add Income Button -->
+<a href="{{ url_for('add_income') }}" class="btn btn-primary mb-3">Add New Income</a>
+
+<!-- Income Records Table -->
+<table class="table">
+    <thead>
+        <tr>
+            {% if session.get('role') == 'admin' %}
+            <th>User ID</th>
+            {% endif %}
+            <th>Source</th> <!-- Source column visible to all users -->
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if not records %}
+        <tr><td colspan="5">No income records found {% if search_query %} matching "{{ search_query }}" {% else %} in the system {% endif %}.</td></tr>
+        {% else %}
+            {% for income in records %}
+            <tr>
+                {% if session.get('role') == 'admin' %}
+                <td>{{ income.user_id }}</td>
+                {% endif %}
+                <td>{{ income.source }}</td> <!-- Source always displayed -->
+                <td>{{ income.amount | round(2) }}</td> <!-- Format amount to 2 decimal places -->
+                <td>{{ income.date }}</td>
+                <td>
+                    <form action="{{ url_for('delete_income', income_id=income.income_id) }}" method="POST" style="display:inline;" class="delete-form">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+
+<script>
+    // Confirmation for delete actions
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            if (!confirm('Are you sure you want to delete this income record?')) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+{% endblock %}

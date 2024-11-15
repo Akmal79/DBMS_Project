@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Enhanced Financial Analysis Overview</h1>
+    
+    <!-- Financial Overview Cards -->
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header"><i class="fas fa-chart-line"></i> Total Investments</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_investment | round(2) }} INR</h5>
+                    <p class="card-text">The overall value of all investments.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header"><i class="fas fa-money-bill-wave"></i> Total Income</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_income | round(2) }} INR</h5>
+                    <p class="card-text">The total income received to date.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header"><i class="fas fa-wallet"></i> Total Expenses</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_expenses | round(2) }} INR</h5>
+                    <p class="card-text">The total expenses incurred to date.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header"><i class="fas fa-piggy-bank"></i> Savings Rate</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ savings_rate | round(2) }}%</h5>
+                    <p class="card-text">Savings rate based on income and expenses.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Trends and Financial Ratios Section -->
+    <div class="row">
+        <!-- Monthly Trends Chart -->
+        <div class="col-md-6">
+            <h3>Monthly Trends</h3>
+            <canvas id="financialChart" style="max-height: 400px;"></canvas>
+        </div>
+
+        <!-- Financial Ratios Chart -->
+        <div class="col-md-6">
+            <h3>Financial Ratios</h3>
+            <canvas id="ratiosChart" style="max-height: 400px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- FontAwesome for Icons and Chart.js Script -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Monthly Trends Chart (Income, Expenses, Savings over time)
+    var ctx1 = document.getElementById('financialChart').getContext('2d');
+    var financialChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: {{ monthly_labels | tojson }}, // Assumes monthly_labels is a list of month names or dates
+            datasets: [
+                {
+                    label: 'Income',
+                    data: {{ monthly_income | tojson }},
+                    backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                    borderColor: '#4caf50',
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'Expenses',
+                    data: {{ monthly_expenses | tojson }},
+                    backgroundColor: 'rgba(244, 67, 54, 0.3)',
+                    borderColor: '#f44336',
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'Savings',
+                    data: {{ monthly_savings | tojson }},
+                    backgroundColor: 'rgba(255, 235, 59, 0.3)',
+                    borderColor: '#ffeb3b',
+                    borderWidth: 2,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue + ' INR';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return value + ' INR'; }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months'
+                    }
+                }
+            }
+        }
+    });
+
+    // Financial Ratios Pie Chart
+    var ctx2 = document.getElementById('ratiosChart').getContext('2d');
+    var ratiosChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: ['Investment to Income Ratio', 'Debt to Income Ratio', 'Savings Rate'],
+            datasets: [{
+                data: [{{ investment_to_income_ratio | round(2) }}, {{ debt_to_income_ratio | round(2) }}, {{ savings_rate | round(2) }}],
+                backgroundColor: ['#00796b', '#c2185b', '#ffeb3b'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

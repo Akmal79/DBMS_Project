@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Expense Records</h2>
+
+<!-- Search Form -->
+<form method="GET" action="{{ url_for('view_expense') }}" class="mb-3">
+    <div class="form-row">
+        <div class="col">
+            <input type="text" name="search" class="form-control" placeholder="Search by category or amount" value="{{ search_query }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-info">Search</button>
+        </div>
+    </div>
+</form>
+
+<!-- Link to Add New Expense -->
+<a href="{{ url_for('add_expense') }}" class="btn btn-primary mb-3">Add New Expense</a>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                {% if session.get('role') == 'admin' %}
+                <th>User ID</th>
+                {% endif %}
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not records %}
+                <tr><td colspan="5">No expenses found {% if search_query %} matching "{{ search_query }}" {% else %} in the system {% endif %}.</td></tr>
+            {% else %}
+                {% for expense in records %}
+                <tr>
+                    {% if session.get('role') == 'admin' %}
+                    <td>{{ expense.user_id }}</td>
+                    {% endif %}
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.amount | round(2) }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_expense', expense_id=expense.expense_id) }}" method="POST" style="display:inline;" class="delete-form">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            if (!confirm('Are you sure you want to delete this expense?')) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Investment</h2>
+<form action="{{ url_for('edit_investment', investment_id=investment.investment_id) }}" method="POST">
+
+    <!-- Only Admin can see and edit the User ID -->
+    {% if session.get('role') == 'admin' %}
+        <div class="form-group">
+            <label for="user_id">User ID:</label>
+            <input type="number" class="form-control" name="user_id" value="{{ investment.user_id }}" required>
+        </div>
+    {% else %}
+        <!-- For non-admin users, display User ID as readonly -->
+    {% endif %}
+
+    <div class="form-group">
+        <label for="investment_type">Investment Type:</label>
+        <input type="text" class="form-control" name="investment_type" value="{{ investment.investment_type }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" class="form-control" name="amount" value="{{ investment.amount }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="interest_rate">Interest Rate (%):</label>
+        <input type="number" class="form-control" name="interest_rate" value="{{ investment.interest_rate }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="start_date">Start Date:</label>
+        <input type="date" class="form-control" name="start_date" value="{{ investment.start_date }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Investment</button>
+</form>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="welcome-message">
+            <h1>Welcome to the DBMS Project!</h1>
+            <p class="lead">Your one-stop solution to manage your financial records effectively.</p>
+            <p>Track your expenses, income, investments, loans, and more, all in one place. Stay on top of your financial goals and make better decisions with ease.</p>
+
+            <div class="cta">
+                <p><strong>Get started now by adding records or viewing your current data.</strong></p>
+                <p>Use the navigation bar at the top to begin.</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Container to center and space the content */
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Styling for the welcome message box */
+        .welcome-message {
+            background-color: #f8f9fa;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Large headline for the welcome message */
+        .welcome-message h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Lead paragraph for brief description */
+        .welcome-message .lead {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Regular paragraph styling */
+        .welcome-message p {
+            font-size: 16px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        /* Call-to-action styling */
+        .cta {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .cta p {
+            margin: 10px 0;
+        }
+
+        /* Highlight the important call-to-action text */
+        .cta strong {
+            font-size: 20px;
+            color: #007bff;
+        }
+    </style>
+{% endblock %}

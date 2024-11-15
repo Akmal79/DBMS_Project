@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS Project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ url_for('home') }}">DBMS Project</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    {% if session.get('user_id') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_expense') }}">Expenses</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_income') }}">Income</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_budget') }}">Budgets</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_loan') }}">Loans</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_investment') }}">Investments</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_goals') }}">Goals</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('financial_analysis') }}">financial_analysis</a></li>
+                        {% if session.get('role') == 'Admin' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('view_user') }}">Users</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                
+                <!-- Login/Register or Logout links -->
+                <ul class="navbar-nav ml-auto">
+                    {% if session.get('user_id') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        <div class="mt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Expense</h2>
+<form method="POST">
+    {% if session.get('role') == 'admin' %}
+    <div class="form-group">
+        <label for="user_id">User ID</label>
+        <input type="text" class="form-control" name="user_id" id="user_id" required>
+    </div>
+    {% else %}
+    <!-- Hidden user_id field for non-admin users, using session's user_id -->
+    <input type="hidden" name="user_id" value="{{ session.get('user_id') }}">
+    {% endif %}
+    
+    <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" class="form-control" name="category" id="category" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="text" class="form-control" name="amount" id="amount" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" class="form-control" name="date" id="date" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add Expense</button>
+</form>
+{% endblock %}

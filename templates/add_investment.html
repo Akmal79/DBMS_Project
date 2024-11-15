@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Investment</h2>
+<form action="{{ url_for('add_investment') }}" method="POST">
+    {% if session.get('role') == 'admin' %}
+    <div class="form-group">
+        <label>User ID:</label>
+        <input type="number" class="form-control" name="user_id" required>
+    </div>
+    {% else %}
+    <!-- Hidden user_id field for non-admin users -->
+    <input type="hidden" name="user_id" value="{{ session.get('user_id') }}">
+    {% endif %}
+
+    <div class="form-group">
+        <label>Investment Type:</label>
+        <input type="text" class="form-control" name="investment_type" required>
+    </div>
+    <div class="form-group">
+        <label>Amount:</label>
+        <input type="number" class="form-control" name="amount" required>
+    </div>
+    <div class="form-group">
+        <label>Interest Rate (%):</label>
+        <input type="number" class="form-control" name="interest_rate" required>
+    </div>
+    <div class="form-group">
+        <label>Start Date:</label>
+        <input type="date" class="form-control" name="start_date" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add Investment</button>
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Search Records</h2>
+<form method="POST">
+    <label for="table">Select Table:</label>
+    <select name="table">
+        <option value="Income">Income</option>
+        <option value="Budget">Budget</option>
+        <option value="Expense">Expense</option>
+        <option value="Goals">Goals</option>
+        <option value="Loan">Loan</option>
+        <option value="Investment">Investment</option>
+    </select>
+
+    <label for="search_term">Search Term:</label>
+    <input type="text" name="search_term" required>
+
+    <button type="submit">Search</button>
+</form>
+{% endblock %}
